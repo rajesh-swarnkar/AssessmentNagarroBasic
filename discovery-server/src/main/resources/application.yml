@@ -1,0 +1,4 @@
+eureka:
+  client:
+    register-with-eureka: false  # The server should not register itself
+    fetch-registry: false # The server does not need to fetch registry information
