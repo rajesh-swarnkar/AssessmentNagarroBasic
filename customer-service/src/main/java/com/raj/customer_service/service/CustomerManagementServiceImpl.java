@@ -1,17 +1,24 @@
 package com.raj.customer_service.service;
 
-import com.raj.customer_service.CustomerRepository;
+import com.netflix.discovery.converters.Auto;
+import com.raj.customer_service.feignClient.AccountClient;
+import com.raj.customer_service.repository.CustomerRepository;
 import com.raj.customer_service.dto.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CustomerManagementServiceImpl implements CustomerManagementService{
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private AccountClient accountClient;
 
     @Override
     public Customer addCustomer(Customer customer) {
@@ -63,6 +70,11 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
     @Override
     public int deleteCustomer(String id) {
         customerRepository.deleteById(id);
+        try{
+            accountClient.deleteAccount(customerRepository.findById(id).get().getAccountNumber());
+        }catch (Exception e){
+            return 0;
+        }
         return 1;
     }
 }

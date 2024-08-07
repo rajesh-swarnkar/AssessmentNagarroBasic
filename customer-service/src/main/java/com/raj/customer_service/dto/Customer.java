@@ -4,7 +4,7 @@ public class Customer {
 
     String id;
     String name;
-    Long accountNumber;
+    String accountNumber;
 
     public String getId() {
         return id;
@@ -22,11 +22,11 @@ public class Customer {
         this.name = name;
     }
 
-    public Long getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 }

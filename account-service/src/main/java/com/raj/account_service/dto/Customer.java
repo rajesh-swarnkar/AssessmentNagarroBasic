@@ -1,17 +1,10 @@
-package com.raj.customer_service.entity;
+package com.raj.account_service.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
 public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     String id;
     String name;
-    String accountNumber;
+    Long accountNumber;
 
     public String getId() {
         return id;
@@ -29,11 +22,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getAccountNumber() {
+    public Long getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(Long accountNumber) {
         this.accountNumber = accountNumber;
     }
 }
