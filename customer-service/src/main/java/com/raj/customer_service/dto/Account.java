@@ -1,4 +1,4 @@
-package com.raj.account_service.dto;
+package com.raj.customer_service.dto;
 
 public class Account {
     Long accountId;

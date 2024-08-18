@@ -2,6 +2,7 @@ package com.raj.customer_service.controller;
 
 import com.raj.customer_service.dto.Customer;
 import com.raj.customer_service.service.CustomerManagementService;
+import com.raj.customer_service.service.CustomerManagementServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,9 @@ public class CustomerManagementController {
     private CustomerManagementService customerManagementService;
 
     @PostMapping(value = "/addCustomer")
-    public void addCustomer(@RequestBody Customer customer){
+    public Customer addCustomer(@RequestBody Customer customer){
 
-        customerManagementService.addCustomer(customer);
+      return customerManagementService.addCustomer(customer);
 
 
     }
@@ -28,7 +29,7 @@ public class CustomerManagementController {
     }
 
     @GetMapping(value = "/{id}")
-    public Customer getCustomer(@PathVariable String id){
+    public Customer getCustomer(@PathVariable Long id){
         return customerManagementService.getCustomer(id);
     }
 
@@ -37,7 +38,7 @@ public class CustomerManagementController {
         return customerManagementService.updateCustomerDetails(customer);
     }
     @DeleteMapping(value = "/delete/{id}")
-    public String deleteCustomer(@PathVariable String id){
+    public String deleteCustomer(@PathVariable Long id){
         try {
             customerManagementService.deleteCustomer(id);
         }catch (Exception e){

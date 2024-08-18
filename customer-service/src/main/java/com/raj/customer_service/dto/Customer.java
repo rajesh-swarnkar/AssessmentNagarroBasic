@@ -2,15 +2,15 @@ package com.raj.customer_service.dto;
 
 public class Customer {
 
-    String id;
+    Long id;
     String name;
-    String accountNumber;
+    Long accountNumber;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -22,11 +22,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getAccountNumber() {
+    public Long getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(Long accountNumber) {
         this.accountNumber = accountNumber;
     }
 }

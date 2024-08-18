@@ -1,9 +1,11 @@
 package com.raj.customer_service.service;
 
 import com.netflix.discovery.converters.Auto;
+import com.raj.customer_service.dto.Account;
 import com.raj.customer_service.feignClient.AccountClient;
 import com.raj.customer_service.repository.CustomerRepository;
 import com.raj.customer_service.dto.Customer;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,30 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
     @Autowired
     private AccountClient accountClient;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public Customer addCustomer(Customer customer) {
+
+        if(customer.getId()!=null)
+            return new Customer();
         com.raj.customer_service.entity.Customer entity=new com.raj.customer_service.entity.Customer();
-        entity.setId(customer.getId());
-        entity.setName(customer.getName());
-        entity.setAccountNumber(customer.getAccountNumber());
-        customerRepository.save(entity);
+        modelMapper.map(customer,entity);
+//        entity.setId(customer.getId());
+//        entity.setName(customer.getName());
+//        entity.setAccountNumber(customer.getAccountNumber());
+        entity=customerRepository.save(entity);
+        Account account=new Account();
+        account.setBalance(0D);
+        account.setCustomerId(entity.getId());
+        Account result = accountClient.addAccount(account);
+        entity.setAccountNumber(result.getAccountId());
+        entity=customerRepository.save(entity);
+
+        customer.setId(entity.getId());
+        customer.setAccountNumber(entity.getAccountNumber());
+
         return customer ;
     }
 
@@ -46,7 +65,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
     }
 
     @Override
-    public Customer getCustomer(String  id) {
+    public Customer getCustomer(Long  id) {
         Optional<com.raj.customer_service.entity.Customer> customer=customerRepository.findById(id);
         Customer result=new Customer();
         if(customer.isPresent()){
@@ -68,7 +87,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
     }
 
     @Override
-    public int deleteCustomer(String id) {
+    public int deleteCustomer(Long id) {
         customerRepository.deleteById(id);
         try{
             accountClient.deleteAccount(customerRepository.findById(id).get().getAccountNumber());

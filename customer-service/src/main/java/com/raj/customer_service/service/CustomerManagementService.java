@@ -10,8 +10,8 @@ public interface CustomerManagementService {
 
     public Customer addCustomer(Customer customer);
     public List<Customer> getAllCustomer();
-    public Customer getCustomer(String  id);
+    public Customer getCustomer(Long  id);
     public Customer updateCustomerDetails(Customer customer);
-    public int deleteCustomer(String id);
+    public int deleteCustomer(Long id);
 
 }

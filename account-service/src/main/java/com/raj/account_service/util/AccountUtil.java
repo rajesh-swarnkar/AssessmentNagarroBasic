@@ -19,6 +19,6 @@ public class AccountUtil {
             if(customer.getId().equals(account.getCustomerId()))
                 return true;
         }
-        return false;
+        throw new RuntimeException("Invalid customer or account id !!");
     }
 }

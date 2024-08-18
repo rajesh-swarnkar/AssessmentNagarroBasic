@@ -10,23 +10,23 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    String accountId;
-    String customerId;
+    Long accountId;
+    Long customerId;
     Double balance;
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
-    public String getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
