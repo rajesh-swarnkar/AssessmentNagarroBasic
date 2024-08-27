@@ -2,14 +2,13 @@ package com.raj.account_service.service;
 
 import com.raj.account_service.dto.Account;
 import com.raj.account_service.repository.AccountManagementRepository;
+import com.raj.account_service.util.AccountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-import static com.raj.account_service.util.AccountUtil.validateCustomer;
 
 @Service
 public class AccountManagementServiceImpl implements  AccountManagementService{
@@ -18,11 +17,15 @@ public class AccountManagementServiceImpl implements  AccountManagementService{
     @Autowired
     private AccountManagementRepository accountManagementRepository;
 
+    @Autowired
+    private AccountUtil accountUtil;
+
     @Override
     public Account addMoney(Account account) {
         //validate customer
+        boolean validCustomer=false;
         try{
-            validateCustomer(account);
+            validCustomer=validateCustomer(account);
         }catch (Exception e){
             log.info(e.getMessage());
             e.printStackTrace();
@@ -30,7 +33,7 @@ public class AccountManagementServiceImpl implements  AccountManagementService{
         }
         Optional<com.raj.account_service.entity.Account> dbData=accountManagementRepository.findById(account.getAccountId());
         com.raj.account_service.entity.Account account1=new com.raj.account_service.entity.Account();
-        if(dbData.isPresent()){
+        if(dbData.isPresent() && validCustomer){
             account1.setAccountId(dbData.get().getAccountId());
             account1.setCustomerId(dbData.get().getCustomerId());
             account1.setBalance(dbData.get().getBalance()+account.getBalance());
@@ -40,17 +43,23 @@ public class AccountManagementServiceImpl implements  AccountManagementService{
         return account;
     }
 
+    private boolean validateCustomer(Account account) {
+       return  accountUtil.validateCustomer(account);
+    }
+
     @Override
     public Account withdrawMondy(Account account) {
         //validate customer
+        boolean validCustomer=false;
         try{
-            validateCustomer(account);
+           validCustomer= validateCustomer(account);
         }catch (Exception e){
-            return null;
+            log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         Optional<com.raj.account_service.entity.Account> dbData=accountManagementRepository.findById(account.getAccountId());
         com.raj.account_service.entity.Account account1=new com.raj.account_service.entity.Account();
-        if(dbData.isPresent()){
+        if(validCustomer && dbData.isPresent()){
             account1.setAccountId(dbData.get().getAccountId());
             account1.setCustomerId(dbData.get().getCustomerId());
             account1.setBalance(dbData.get().getBalance()-account.getBalance());

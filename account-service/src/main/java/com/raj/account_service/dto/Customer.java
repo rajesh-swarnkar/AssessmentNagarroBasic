@@ -1,16 +1,18 @@
 package com.raj.account_service.dto;
 
+import org.apache.logging.log4j.message.LoggerNameAwareMessage;
+
 public class Customer {
 
-    String id;
+    Long id;
     String name;
     Long accountNumber;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

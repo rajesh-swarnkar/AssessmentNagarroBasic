@@ -6,6 +6,8 @@ import com.raj.customer_service.feignClient.AccountClient;
 import com.raj.customer_service.repository.CustomerRepository;
 import com.raj.customer_service.dto.Customer;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
 @Service
 public class CustomerManagementServiceImpl implements CustomerManagementService{
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerManagementServiceImpl.class);
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -39,6 +42,7 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
         Account account=new Account();
         account.setBalance(0D);
         account.setCustomerId(entity.getId());
+        log.info("account value  before sending      {}",account.toString());
         Account result = accountClient.addAccount(account);
         entity.setAccountNumber(result.getAccountId());
         entity=customerRepository.save(entity);
@@ -78,21 +82,25 @@ public class CustomerManagementServiceImpl implements CustomerManagementService{
 
     @Override
     public Customer updateCustomerDetails(Customer customer) {
-        com.raj.customer_service.entity.Customer entity=new com.raj.customer_service.entity.Customer();
+        com.raj.customer_service.entity.Customer entity=customerRepository.findById(customer.getId()).orElse(new com.raj.customer_service.entity.Customer());
         entity.setId(customer.getId());
         entity.setName(customer.getName());
-        entity.setAccountNumber(customer.getAccountNumber());
+//        entity.setAccountNumber(customer.getAccountNumber());
         customerRepository.save(entity);
+        customer.setAccountNumber(entity.getAccountNumber());
         return customer;
     }
 
     @Override
     public int deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+
         try{
             accountClient.deleteAccount(customerRepository.findById(id).get().getAccountNumber());
+            customerRepository.deleteById(id);
         }catch (Exception e){
-            return 0;
+            log.info("\n");
+            log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return 1;
     }
