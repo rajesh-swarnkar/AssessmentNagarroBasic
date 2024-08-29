@@ -6,6 +6,10 @@ import feign.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +20,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/account")
+@RefreshScope
+//@ConfigurationPropertiesScan
+//@ConfigurationProperties(prefix = "")
 public class AccountManagementController {
+    @Value("${msg: Hello World}")
+    String msg;
+
+    @Value("${withdrawMSG}")
+    String withdrawMsg;
 
     private static final Logger log = LoggerFactory.getLogger(AccountManagementController.class);
     @Autowired
@@ -34,7 +46,7 @@ public class AccountManagementController {
         try{
             account1=  accountManagementService.withdrawMondy(account);
             map.put("data",account1);
-            map.put("message","withdraw successful!!");
+            map.put("message",withdrawMsg);//withdraw successful!!
         }catch (Exception e){
 
             map.put("data",new Account());
@@ -49,6 +61,9 @@ public class AccountManagementController {
 
     @GetMapping(value = "/accountDetails/{id}")
     public Account getAccountDetails(@PathVariable Long id){
+
+        log.info("msg from central repo: {}",msg);
+
         return accountManagementService.getAccountDetails(id);
     }
 

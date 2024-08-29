@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+         native:
+           search-locations: file:///C:/workspace/AssessmentNagarroBasic/config
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
